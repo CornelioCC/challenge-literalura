@@ -1,11 +1,9 @@
 package com.alurachallenge.Literalura;
 
+import com.alurachallenge.Literalura.menuprincipal.MenuPrincipal;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.awt.*;
-import java.security.Principal;
 
 @SpringBootApplication
 public class LiteraluraApplication implements CommandLineRunner {
