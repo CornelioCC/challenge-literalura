@@ -1,11 +1,14 @@
 package com.alurachallenge.Literalura.menuprincipal;
 
 import aj.org.objectweb.asm.TypeReference;
+import com.alurachallenge.Literalura.modelos.Libro;
 import com.alurachallenge.Literalura.modelos.RLibro;
+import com.alurachallenge.Literalura.repositorio.LibroRepositorio;
 import com.alurachallenge.Literalura.servicios.ConsumoApi;
 import com.alurachallenge.Literalura.servicios.Convertidor;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class MenuPrincipal {
@@ -14,6 +17,12 @@ public class MenuPrincipal {
     private Scanner entrada = new Scanner(System.in);
     private final String URL_BASE = "https://gutendex.com/books/?";
     private final String BUSCAR = "search=";
+    private LibroRepositorio repo;
+    private Optional<Libro> libroBuscado;
+
+    public MenuPrincipal(LibroRepositorio repositorio) {
+        this.repo = repositorio;
+    }
 
     public void muestraMenu() {
 
@@ -25,6 +34,7 @@ public class MenuPrincipal {
                     buscarLibro();
                     break;
                 case 2:
+                    listarLibrosRegistrados();
                     break;
                 case 3:
                     break;
@@ -41,15 +51,30 @@ public class MenuPrincipal {
 
     }
 
+    private void listarLibrosRegistrados() {
+        System.out.println("-----Lista de libros-----");
+        List<Libro> listaLibros = repo.findAll();
+        if (listaLibros.size() == 0){
+            System.out.println("Ningun libro registrado aun");
+        }
+        listaLibros.stream()
+                .forEach(System.out::println);
+    }
+
     private void buscarLibro(){
         System.out.println("Ingrese el nombre del libro que desea buscar: ");
         String nombreLibro = entrada.nextLine();
-        //var resultado = consumoApi.obtenerDatos(URL_BASE + BUSCAR + nombreLibro.replace(" ", "+").trim());
-        var resultado = consumoApi.obtenerDatos(URL_BASE + "ids=51238");
+        var resultado = consumoApi.obtenerDatos(URL_BASE + BUSCAR + nombreLibro.replace(" ", "+").trim());
+        //var resultado = consumoApi.obtenerDatos(URL_BASE + "ids=51238");
         RLibro libro = convertidor.obtenerRLibroDesdeJson(resultado);
-        System.out.println(libro);
-
-
+        Libro libroEncontrado = new Libro(libro);
+        System.out.println(libroEncontrado);
+        try{
+            repo.save(libroEncontrado);
+            System.out.println("El libro se registro con exito");
+        }catch (Exception e){
+            System.out.println("Libro ya registrado");
+        }
     }
 
 

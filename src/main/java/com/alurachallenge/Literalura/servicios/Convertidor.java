@@ -1,6 +1,7 @@
 package com.alurachallenge.Literalura.servicios;
 
 import com.alurachallenge.Literalura.modelos.Autor;
+import com.alurachallenge.Literalura.modelos.RAutor;
 import com.alurachallenge.Literalura.modelos.Idioma;
 import com.alurachallenge.Literalura.modelos.RLibro;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,31 +34,29 @@ public class Convertidor {
             String autoresJson = "[" + nodoAutores.substring(1, nodoAutores.length() - 1) + "]";
             JsonNode jsonAutores = objectMapper.readTree(autoresJson);
             //Crear la lista de autores
-            List<Autor> autores = new ArrayList<>();
+            List<RAutor> autores = new ArrayList<>();
             for (int i = 0; i < jsonAutores.size(); i++){
-                autores.add(obtenerDatos(jsonAutores.get(i).toString(), Autor.class));
+                autores.add(obtenerDatos(jsonAutores.get(i).toString(), RAutor.class));
             }
-            System.out.println(autores);
 
             //Json Idiomas
             String nodoIdioma = nodosLejanos.get("languages").toString();
             String idiomasJson = "["+ nodoIdioma.substring(1, nodoIdioma.length() - 1) +"]";
-            System.out.println(idiomasJson);
+
             JsonNode jsonIdiomas = objectMapper.readTree(idiomasJson);
             //Crear la lista de idiomas
             List<Idioma> idiomas = new ArrayList<>();
             for (int i = 0; i < jsonIdiomas.size(); i++){
                 idiomas.add(obtenerDatos(jsonIdiomas.get(i).toString(), Idioma.class));
             }
-            System.out.println(idiomas);
 
             //Libros totales obtenidos en la busqueda
             List<RLibro> libros = objectMapper.readValue(jsonLibros, new TypeReference<List<RLibro>>(){});
 
             //RLibro completo con toda la informacion obtenida
             RLibro libroIncompleto = libros.get(0);
+
             RLibro librocompleto = new RLibro(libroIncompleto.id(), libroIncompleto.titulo(), autores, idiomas, libroIncompleto.numeroDescargas());
-            System.out.println(librocompleto);
 
             return librocompleto;
 

@@ -9,7 +9,7 @@ import java.util.List;
 public record RLibro(
         @JsonAlias("id") long id,
         @JsonAlias("title") String titulo,
-        List<Autor> autores,
+        List<RAutor> autores,
         List<Idioma> idiomas,
         @JsonAlias("download_count") long numeroDescargas)
 
