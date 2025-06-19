@@ -19,6 +19,19 @@ public class Autor {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Libro> libros = new ArrayList<>();
 
+    @Override
+    public String toString(){
+        String cadenaLibros = "";
+        for (Libro l : this.libros){
+            cadenaLibros += l.getTitulo() + " , ";
+        }
+        return "\n----- Autor -----\n" +
+                "Nombre : " + this.nombre +
+                "\nAño de Nacimiento: " + this.anoNacimiento +
+                "\nAño de Fallecimiento: " + this.anoMuerte +
+                "\nLibros : " + cadenaLibros.substring(0,cadenaLibros.length() - 3);
+    }
+
     public void agregarLibro(Libro libro){
         this.libros.add(libro);
     }

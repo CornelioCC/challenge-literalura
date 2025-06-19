@@ -1,6 +1,7 @@
 package com.alurachallenge.Literalura.menuprincipal;
 
 import aj.org.objectweb.asm.TypeReference;
+import com.alurachallenge.Literalura.modelos.Autor;
 import com.alurachallenge.Literalura.modelos.Libro;
 import com.alurachallenge.Literalura.modelos.RLibro;
 import com.alurachallenge.Literalura.repositorio.LibroRepositorio;
@@ -37,6 +38,7 @@ public class MenuPrincipal {
                     listarLibrosRegistrados();
                     break;
                 case 3:
+                    listarAutoresRegistrados();
                     break;
                 case 4:
                     break;
@@ -51,6 +53,14 @@ public class MenuPrincipal {
 
     }
 
+    private void listarAutoresRegistrados() {
+        System.out.println("-----Lista de Autores-----");
+        List<Autor> listaAutores = repo.listaAutores();
+        listaAutores.stream()
+                .forEach(System.out::println);
+        System.out.println("--------------------------");
+    }
+
     private void listarLibrosRegistrados() {
         System.out.println("-----Lista de libros-----");
         List<Libro> listaLibros = repo.findAll();
@@ -59,21 +69,33 @@ public class MenuPrincipal {
         }
         listaLibros.stream()
                 .forEach(System.out::println);
+        System.out.println("-------------------------");
     }
 
     private void buscarLibro(){
         System.out.println("Ingrese el nombre del libro que desea buscar: ");
         String nombreLibro = entrada.nextLine();
         var resultado = consumoApi.obtenerDatos(URL_BASE + BUSCAR + nombreLibro.replace(" ", "+").trim());
-        //var resultado = consumoApi.obtenerDatos(URL_BASE + "ids=51238");
-        RLibro libro = convertidor.obtenerRLibroDesdeJson(resultado);
-        Libro libroEncontrado = new Libro(libro);
-        System.out.println(libroEncontrado);
-        try{
-            repo.save(libroEncontrado);
-            System.out.println("El libro se registro con exito");
+        Libro libroEncontrado = new Libro();
+        try {
+            RLibro libro = convertidor.obtenerRLibroDesdeJson(resultado);
+            libroEncontrado = new Libro(libro);
+            System.out.println(libroEncontrado);
         }catch (Exception e){
-            System.out.println("Libro ya registrado");
+            System.out.println("No se ha encontrado ningun libro");
+        }
+        if (libroEncontrado != null) {
+            try {
+                repo.save(libroEncontrado);
+                System.out.println("El libro se registro con exito");
+            } catch (Exception e) {
+                if (libroEncontrado.getTitulo().length() > 255){
+                    System.out.println("Titulo demasiado largo para registrar");
+                }else {
+                    System.out.println("Libro ya registrado");
+                }
+
+            }
         }
     }
 
