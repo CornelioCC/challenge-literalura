@@ -29,7 +29,12 @@ public class Autor {
                 "Nombre : " + this.nombre +
                 "\nAño de Nacimiento: " + this.anoNacimiento +
                 "\nAño de Fallecimiento: " + this.anoMuerte +
-                "\nLibros : " + cadenaLibros.substring(0,cadenaLibros.length() - 3);
+                "\nLibros : " + cadenaLibros.substring(0,cadenaLibros.length() - 3) +
+                "--------------------";
+    }
+
+    public boolean estaVivoEnAno(int anoConsulta){
+        return (anoConsulta >= anoNacimiento && anoConsulta <= anoMuerte);
     }
 
     public void agregarLibro(Libro libro){

@@ -41,6 +41,7 @@ public class MenuPrincipal {
                     listarAutoresRegistrados();
                     break;
                 case 4:
+                    listarAutoresVivosEnDeterminadoAno();
                     break;
                 case 5:
                     break;
@@ -51,6 +52,27 @@ public class MenuPrincipal {
         }
         System.out.println("Programa finalizado");
 
+    }
+
+    private void listarAutoresVivosEnDeterminadoAno() {
+        boolean numeroIngresado = false;
+        int anoConsulta = 0;
+        while (!numeroIngresado){
+            System.out.println("Ingrese el año en que desea consultar: ");
+            try{
+                anoConsulta = Integer.valueOf(entrada.nextLine());
+                numeroIngresado = true;
+            }catch (Exception e){
+                System.out.println("No se ha ingresado un numero entero");
+            }
+
+        }
+        List<Autor> listaAutores = repo.listaAutores();
+        for (Autor a : listaAutores){
+            if (a.estaVivoEnAno(anoConsulta)){
+                System.out.println(a);
+            }
+        }
     }
 
     private void listarAutoresRegistrados() {
