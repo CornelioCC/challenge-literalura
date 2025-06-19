@@ -30,7 +30,7 @@ public class Autor {
                 "\nAño de Nacimiento: " + this.anoNacimiento +
                 "\nAño de Fallecimiento: " + this.anoMuerte +
                 "\nLibros : " + cadenaLibros.substring(0,cadenaLibros.length() - 3) +
-                "--------------------";
+                "\n--------------------";
     }
 
     public boolean estaVivoEnAno(int anoConsulta){

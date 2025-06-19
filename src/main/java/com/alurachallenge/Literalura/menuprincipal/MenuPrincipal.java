@@ -2,12 +2,14 @@ package com.alurachallenge.Literalura.menuprincipal;
 
 import aj.org.objectweb.asm.TypeReference;
 import com.alurachallenge.Literalura.modelos.Autor;
+import com.alurachallenge.Literalura.modelos.Idioma;
 import com.alurachallenge.Literalura.modelos.Libro;
 import com.alurachallenge.Literalura.modelos.RLibro;
 import com.alurachallenge.Literalura.repositorio.LibroRepositorio;
 import com.alurachallenge.Literalura.servicios.ConsumoApi;
 import com.alurachallenge.Literalura.servicios.Convertidor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -44,6 +46,7 @@ public class MenuPrincipal {
                     listarAutoresVivosEnDeterminadoAno();
                     break;
                 case 5:
+                    listarLibrosPorIdioma();
                     break;
                 case 0:
                     break;
@@ -52,6 +55,34 @@ public class MenuPrincipal {
         }
         System.out.println("Programa finalizado");
 
+    }
+
+    private void listarLibrosPorIdioma() {
+        boolean idiomaValido = false;
+        List<Idioma> escogidoL = new ArrayList<>();
+        while(!idiomaValido) {
+            System.out.println("-----Idiomas disponibles-----");
+            for (Idioma i : Idioma.values()) {
+                System.out.println("\n" + i.toString() + " - " + i.getIdiomaEnPalabras());
+            }
+            System.out.println("-----------------------------");
+            System.out.println("Escriba las dos letras correspondientes al idioma que desea buscar: ");
+            String idioma = entrada.nextLine();
+            Idioma escogido = Idioma.fromString(idioma);
+            escogidoL.add(escogido);
+            if (escogido != null){
+                idiomaValido = true;
+            }else{
+                System.out.println("Idioma no valido, intente de nuevo");
+            }
+        }
+        List<Libro> listaLibros = repo.findByIdiomas(escogidoL);
+        if (listaLibros.size() > 0) {
+            System.out.println("----- Libros Encontrados -----");
+            System.out.println(listaLibros);
+        }else{
+            System.out.println("No se ha registrado ningun libro en ese idioma");
+        }
     }
 
     private void listarAutoresVivosEnDeterminadoAno() {
@@ -111,9 +142,11 @@ public class MenuPrincipal {
                 repo.save(libroEncontrado);
                 System.out.println("El libro se registro con exito");
             } catch (Exception e) {
-                if (libroEncontrado.getTitulo().length() > 255){
+                if (libroEncontrado.getTitulo() == null){
+                    System.out.println("Libro no encontrado");
+                }else if(libroEncontrado.getTitulo().length() > 255){
                     System.out.println("Titulo demasiado largo para registrar");
-                }else {
+                }else{
                     System.out.println("Libro ya registrado");
                 }
 
